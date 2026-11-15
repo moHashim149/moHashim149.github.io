@@ -7,36 +7,36 @@ const PROJECTS = [
   {
     short: "SS", name: "SahlaShop", kind: "Multi-vendor marketplace",
     grad: "linear-gradient(135deg,#7c6cf5,#4e3fd6)",
-    desc: "Flagship multi-vendor shopping app: products, restaurants, pharmacies, classifieds, gift cards and vouchers, with loyalty points, a digital wallet, an AI chat assistant and VIP subscriptions. Sellers run their shop, products, orders and payments from a dedicated dashboard.",
-    role: "Features, bug fixing, performance and store releases across a <b>200K+ line</b> codebase.",
-    tags: ["BLoC", "Clean Architecture", "Freezed", "Drift", "Hive", "Socket.IO", "Firebase"],
+    desc: "Flagship multi-vendor shopping app: products, restaurants, pharmacies, classifieds, gift cards and vouchers, with loyalty points, a digital wallet, an AI chat assistant and VIP subscriptions. Sellers run their shop, products, orders and payments from a dedicated dashboard. Order updates arrive live over Pusher.",
+    role: "Features, bug fixing, performance, <b>Pusher real-time updates</b> and store releases across a <b>200K+ line</b> codebase.",
+    tags: ["BLoC", "Clean Architecture", "Freezed", "Drift", "Hive", "Pusher", "Socket.IO", "Firebase"],
     android: "https://play.google.com/store/apps/details?id=ua.suliit.com",
     ios: "https://apps.apple.com/us/app/sahlashop/id6473451976"
   },
   {
     short: "SP", name: "SahlaShop Picker", kind: "Warehouse operations",
     grad: "linear-gradient(135deg,#38d9c4,#1f9e8e)",
-    desc: "Operations app for store and warehouse staff to pick, pack and manage customer orders. Real-time order status updates and streamlined workflows improve fulfilment speed and accuracy.",
-    role: "Built picking and packing flows with <b>real-time status sync</b>.",
-    tags: ["Flutter", "REST APIs", "Real-time", "Barcode"],
+    desc: "Operations app for store and warehouse staff to pick, pack and manage customer orders. Real-time order status updates and streamlined workflows improve fulfilment speed and accuracy. Orders are kept in local storage (Hive) and synced with remote data, so pickers keep working on a weak connection.",
+    role: "Picking and packing flows with <b>real-time status sync</b> and a <b>local-storage-to-remote sync layer</b> built on Hive.",
+    tags: ["Flutter", "Hive", "Local storage sync", "REST APIs", "Real-time", "Barcode"],
     android: "https://play.google.com/store/apps/details?id=ua.suliitpicker.com",
     ios: "https://apps.apple.com/us/app/amcoop-picker/id6754638042"
   },
   {
     short: "WD", name: "WeDeliver Driver", kind: "Delivery & logistics",
     grad: "linear-gradient(135deg,#f0943e,#d96f1c)",
-    desc: "Delivery app for drivers to receive orders, navigate to drop-off points and manage delivery tasks, with live status updates and order tracking throughout the run.",
-    role: "Navigation, task flow and <b>live tracking</b> on the driver side.",
-    tags: ["Google Maps", "Geolocation", "Push notifications"],
+    desc: "Delivery app for drivers to receive orders, navigate to drop-off points and manage delivery tasks, with live status updates and order tracking throughout the run. Real-time order and location updates run over Pusher.",
+    role: "Navigation, task flow, <b>live location tracking</b> and <b>Pusher real-time updates</b> on the driver side.",
+    tags: ["Google Maps", "Geolocation", "Live tracking", "Pusher", "Push notifications"],
     android: "https://play.google.com/store/apps/details?id=ua.suliitdriver.com",
     ios: "https://apps.apple.com/us/app/weideliver/id6753266053"
   },
   {
     short: "WS", name: "WeDeliver Store", kind: "Vendor management",
     grad: "linear-gradient(135deg,#ef5f82,#c93a5f)",
-    desc: "Store-side app letting vendors receive, manage and track customer orders, with product management and delivery coordination.",
-    role: "Order intake, product management and <b>delivery coordination</b>.",
-    tags: ["Flutter", "REST APIs", "Notifications"],
+    desc: "Store-side app letting vendors receive, manage and track customer orders, with product management and delivery coordination. New orders and driver status arrive in real time over Pusher.",
+    role: "Order intake, product management, <b>delivery coordination</b> and <b>Pusher real-time updates</b>.",
+    tags: ["Flutter", "Pusher", "REST APIs", "Notifications"],
     android: "https://play.google.com/store/apps/details?id=ua.suliitstore.app.com",
     ios: "https://apps.apple.com/us/app/weideliver-store/id6753308367"
   },
@@ -115,18 +115,23 @@ const SKILLS = [
   },
   {
     title: "Offline-first storage",
-    what: "Local persistence with Drift, Hive and SQLite so the app stays usable without a connection, plus debounced and hybrid search.",
-    used: "SahlaShop"
+    what: "Local storage with Hive, Drift and SQLite, synced with remote data so the app stays usable without a connection and reconciles when it is back. Plus debounced and hybrid search.",
+    used: "SahlaShop, SahlaShop Picker"
   },
   {
     title: "Real-time features",
     what: "Live bidding, anti-sniping timers, order status streams and chat over Socket.IO and Pusher Channels, with Agora RTC/RTM for voice and messaging.",
-    used: "saudi-auction, andk-zood, ride-hailing"
+    used: "SahlaShop, WeDeliver Driver, WeDeliver Store, saudi-auction, andk-zood, ride-hailing"
   },
   {
     title: "Payments",
     what: "Moyasar, Tabby (BNPL), Apple Pay and Mada/Visa/Mastercard, including deposits, commission payments, wallets and refund flows.",
     used: "andk-zood, saudi-auction, café ordering"
+  },
+  {
+    title: "Driving & delivery apps",
+    what: "Driver-side and ride/delivery apps with real-time updates and live tracking: dispatch, navigation, location streaming, order status and task flow between driver, store and customer.",
+    used: "WeDeliver Driver, WeDeliver Store, ride-hailing"
   },
   {
     title: "Maps & location",
@@ -149,25 +154,27 @@ const TOOLS = [
   ["Mobile", ["Flutter", "Dart", "Android", "iOS"]],
   ["Architecture & state", ["Clean Architecture", "BLoC / Cubit", "GetX", "get_it", "injectable", "GoRouter", "AutoRoute"]],
   ["Data", ["Dio", "Freezed", "JsonSerializable", "Drift", "Hive", "SQLite", "Result / Either"]],
-  ["Real-time & services", ["Socket.IO", "Pusher Channels", "Agora RTC/RTM", "Firebase", "Google Maps"]],
+  ["Real-time & services", ["Socket.IO", "Pusher Channels", "Live tracking", "Agora RTC/RTM", "Firebase", "Google Maps"]],
   ["Payments", ["Moyasar", "Tabby", "Apple Pay", "Mada", "Visa / Mastercard"]],
   ["Workflow", ["Git & GitHub", "Postman", "ApiDog", "Figma", "AI agents (Claude, Cursor)"]]
 ];
 
 const TIMELINE = [
   {
-    role: "Flutter Developer", co: "Link Development Co.", date: "Aug 2025 – Present", now: true,
+    role: "Flutter Developer", co: "Link Development Co.", date: "Mar 2026 – Present", now: true,
     points: [
       "Developed and maintained live production apps for the Saudi market — marketplaces and auctions.",
       "Built listings, bidding, chat, favourites, wallet and payment features.",
       "Integrated Moyasar and Tabby (BNPL) payment gateways.",
       "Integrated Agora RTC/RTM for in-app voice and messaging.",
       "Integrated Pusher Channels and Socket.IO for real-time updates.",
-      "Built real-time auction flows: live bidding, anti-sniping timers and socket status updates."
+      "Built real-time auction flows: live bidding, anti-sniping timers and socket status updates.",
+      "Built delivery and driver apps with real-time updates and live tracking (SahlaShop, WeDeliver Driver and Store) using Pusher.",
+      "Built local-storage sync with Hive against remote data in SahlaShop Picker."
     ]
   },
   {
-    role: "Flutter Developer", co: "Code Craft (Software House)", date: "Jan 2023 – Aug 2025",
+    role: "Flutter Developer", co: "Code Craft (Software House)", date: "Jan 2023 – Mar 2026",
     points: [
       "Developed, maintained and supported 7 live production mobile applications.",
       "Built scalable, maintainable features using Flutter and Clean Architecture.",
@@ -255,7 +262,6 @@ $("#projectCards").innerHTML = PROJECTS.map(p => `
       </div>
     </div>
     <p>${esc(p.desc)}</p>
-    <p class="role"><b>My part:</b> ${p.role}</p>
     <div class="tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join("")}</div>
     <div class="store-links">${storeLinks(p)}</div>
   </article>`).join("");
