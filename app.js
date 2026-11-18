@@ -337,6 +337,13 @@ addEventListener("scroll", () => {
   links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + current));
 }, { passive: true });
 
+/* theme toggle */
+$("#themeBtn").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("theme", next); } catch {}
+});
+
 /* mobile menu */
 const toggle = $("#navToggle");
 toggle.addEventListener("click", () => {
