@@ -66,6 +66,14 @@ const PROJECTS = [
     tags: ["Socket.IO", "Pusher", "Moyasar", "Wallet"],
     android: "https://play.google.com/store/apps/details?id=com.linkdevelopment.mazad",
     ios: "https://apps.apple.com/us/app/saudi-auction/id6770861278"
+  },
+  {
+    short: "BZ", name: "BidZone Auctions", kind: "Electronics auctions",
+    grad: "linear-gradient(135deg,#f5c542,#d99a12)",
+    desc: "Live electronics auctions from your phone, covering the whole cycle in one app: pay a deposit to join, bid in real time, then pay for the win and get the item shipped through the built-in shipping service. No payment or delivery arranged outside the app.",
+    tags: ["Flutter", "Real-time bidding", "Deposits", "Payments", "Shipping"],
+    android: "https://play.google.com/store/apps/details?id=com.linkdevelopment.bidzone",
+    ios: "https://apps.apple.com/us/app/bidzone-auctions/id6798772923"
   }
 ];
 
@@ -169,6 +177,7 @@ const TIMELINE = [
       "Integrated Agora RTC/RTM for in-app voice and messaging.",
       "Integrated Pusher Channels and Socket.IO for real-time updates.",
       "Built real-time auction flows: live bidding, anti-sniping timers and socket status updates.",
+      "Shipped BidZone Auctions to the App Store and Google Play.",
       "Built delivery and driver apps with real-time updates and live tracking (SahlaShop, WeDeliver Driver and Store) using Pusher.",
       "Built local-storage sync with Hive against remote data in SahlaShop Picker."
     ]

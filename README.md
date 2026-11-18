@@ -1,6 +1,6 @@
 # Mohamed Hashim — Portfolio
 
-Personal portfolio site. Flutter developer, 3+ years, 7 production apps on the App Store and Google Play.
+Personal portfolio site. Flutter developer, 3+ years, 8 production apps on the App Store and Google Play.
 
 Static site — plain HTML, CSS and JavaScript. No build step, no dependencies.
 
@@ -40,14 +40,3 @@ Add an app by appending one object to `PROJECTS`:
 
 It appears in the phone mockup and the work section automatically. Omit `android` or `ios` to hide that store button.
 
-## Running locally
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open http://localhost:8000.
-
-## Deploying
-
-Pushed to the `main` branch of a GitHub repo with Pages enabled (Settings → Pages → Deploy from a branch → `main` / `root`).
