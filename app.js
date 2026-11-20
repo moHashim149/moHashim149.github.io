@@ -177,15 +177,14 @@ const TIMELINE = [
       "Integrated Agora RTC/RTM for in-app voice and messaging.",
       "Integrated Pusher Channels and Socket.IO for real-time updates.",
       "Built real-time auction flows: live bidding, anti-sniping timers and socket status updates.",
-      "Shipped BidZone Auctions to the App Store and Google Play.",
-      "Built delivery and driver apps with real-time updates and live tracking (SahlaShop, WeDeliver Driver and Store) using Pusher.",
+      "Built delivery and driver apps with real-time updates and live tracking.",
       "Built local-storage sync with Hive against remote data in SahlaShop Picker."
     ]
   },
   {
     role: "Flutter Developer", co: "Code Craft (Software House)", date: "Jan 2023 – Mar 2026",
     points: [
-      "Developed, maintained and supported 7 live production mobile applications.",
+      "Developed, maintained and supported live production mobile applications.",
       "Built scalable, maintainable features using Flutter and Clean Architecture.",
       "Diagnosed and fixed critical bugs, improving app performance and reliability.",
       "Integrated backend services and REST APIs.",
