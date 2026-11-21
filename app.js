@@ -171,14 +171,13 @@ const TIMELINE = [
   {
     role: "Flutter Developer", co: "Link Development Co.", date: "Mar 2026 – Present", now: true,
     points: [
-      "Developed and maintained live production apps for the Saudi market — marketplaces and auctions.",
+      "Developed and maintained live production apps for the Saudi market — marketplaces.",
       "Built listings, bidding, chat, favourites, wallet and payment features.",
       "Integrated Moyasar and Tabby (BNPL) payment gateways.",
       "Integrated Agora RTC/RTM for in-app voice and messaging.",
       "Integrated Pusher Channels and Socket.IO for real-time updates.",
       "Built real-time auction flows: live bidding, anti-sniping timers and socket status updates.",
       "Built delivery and driver apps with real-time updates and live tracking.",
-      "Built local-storage sync with Hive against remote data in SahlaShop Picker."
     ]
   },
   {
@@ -187,6 +186,7 @@ const TIMELINE = [
       "Developed, maintained and supported live production mobile applications.",
       "Built scalable, maintainable features using Flutter and Clean Architecture.",
       "Diagnosed and fixed critical bugs, improving app performance and reliability.",
+      "Built local-storage sync with Hive against remote data.",
       "Integrated backend services and REST APIs.",
       "Managed app releases and updates on the App Store and Google Play.",
       "Mentored developers and ran code reviews."
