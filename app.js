@@ -234,15 +234,100 @@ $("#appGrid").innerHTML = PROJECTS.map((p, i) => `
     <span class="app-name">${esc(p.name)}</span>
   </button>`).join("");
 
+/* store assets, in priority order:
+   1. App Store lookup API (live, CORS-enabled)  -> icon + screenshots
+   2. data/play.json (Google Play, refreshed weekly by a GitHub Action) -> only if the App Store failed
+   3. the original initials tile (icon) / no screenshots at all -> if both failed */
+const STORE = {};          // App Store, live
+let PLAY = {};             // Google Play fallback
+let appleDone = false;     // Play data is ignored until the App Store request has finished or failed
+const iosId = p => ((p.ios || "").match(/id(\d+)/) || [])[1];
+const pkgId = p => ((p.android || "").match(/[?&]id=([\w.]+)/) || [])[1];
+const assetsFor = p => {
+  const a = STORE[iosId(p)] || {};
+  const g = appleDone ? (PLAY[pkgId(p)] || {}) : {};
+  return { icon: a.icon || g.icon, shots: (a.shots && a.shots.length) ? a.shots : (g.shots || []) };
+};
+
+function applyStoreIcons() {
+  document.querySelectorAll("#appGrid .app, #projectCards .card").forEach(el => {
+    const st = assetsFor(PROJECTS[+el.dataset.i]);
+    const tile = el.querySelector(".app-icon, .card-icon");
+    if (!st.icon) return;
+    const cur = tile.querySelector("img");
+    if (cur) { if (cur.getAttribute("src") !== st.icon) cur.src = st.icon; return; }   // icon changed on the store
+    const img = new Image();
+    img.alt = "";
+    img.onload = () => {
+      if (tile.querySelector("img")) return;
+      tile.appendChild(img);
+      tile.classList.add("has-img");            // hide the initials + gradient behind the icon
+      requestAnimationFrame(() => img.classList.add("on"));   // fade in, no pop
+    };
+    img.src = st.icon;
+  });
+}
+
+const lookup = async (ids, country) => {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 5000);          // do not wait forever on a slow App Store
+  try {
+    const r = await fetch(`https://itunes.apple.com/lookup?id=${ids.join(",")}&country=${country}`, { signal: ctl.signal });
+    return (await r.json()).results || [];
+  } catch { return []; }
+  finally { clearTimeout(timer); }
+};
+
+async function loadPlayFallback() {
+  try { PLAY = await (await fetch("data/play.json")).json(); } catch {}
+}
+
+async function loadStoreAssets() {
+  const KEY = "storeAssets.v1", TTL = 30 * 60 * 1000;
+  let fresh = false;
+
+  // paint instantly from the last visit (even if stale), refresh below
+  try {
+    const c = JSON.parse(localStorage.getItem(KEY));
+    if (c) { Object.assign(STORE, c.d); fresh = Date.now() - c.t < TTL; }
+  } catch {}
+  applyStoreIcons();
+
+  if (!fresh) {
+    const ids = [...new Set(PROJECTS.map(iosId).filter(Boolean))];
+    const [us, sa] = await Promise.all([lookup(ids, "us"), lookup(ids, "sa")]);   // both at once
+    const got = {};
+    [...sa, ...us].forEach(a => {                                                 // US wins over SA
+      got[a.trackId] = {
+        icon: a.artworkUrl512 || a.artworkUrl100,
+        shots: (a.screenshotUrls && a.screenshotUrls.length) ? a.screenshotUrls : (a.ipadScreenshotUrls || [])
+      };
+    });
+    if (Object.keys(got).length) {
+      Object.assign(STORE, got);
+      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d: STORE })); } catch {}
+    }
+  }
+
+  // App Store is settled: only now bring in Google Play for anything it could not supply
+  appleDone = true;
+  await loadPlayFallback();
+  applyStoreIcons();
+}
+loadStoreAssets();
+
 /* phone: detail view */
 const screenHome = $("#screenHome"), screenDetail = $("#screenDetail"), detailBody = $("#detailBody");
 
 function openApp(i) {
   const p = PROJECTS[i];
+  const st = assetsFor(p);
+  const shots = (st.shots || []).slice(0, 6);
   detailBody.innerHTML = `
-    <div class="d-icon" style="background:${p.grad}">${esc(p.short)}</div>
+    <div class="d-icon${st.icon ? " has-img" : ""}" style="background:${p.grad}">${esc(p.short)}${st.icon ? `<img class="on" src="${st.icon}" alt="" onerror="this.parentNode.classList.remove('has-img');this.remove()">` : ""}</div>
     <p class="d-name">${esc(p.name)}</p>
     <p class="d-kind">${esc(p.kind)}</p>
+    ${shots.length ? `<div class="d-shots">${shots.map(u => `<img src="${u}" alt="${esc(p.name)} screenshot" loading="lazy" onerror="this.remove()">`).join("")}</div>` : ""}
     <p class="d-desc">${esc(p.desc)}</p>
     <div class="d-tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join("")}</div>
     <div class="d-links">${storeLinks(p, "")}</div>`;
@@ -260,8 +345,8 @@ $("#appGrid").addEventListener("click", e => {
 $("#backBtn").addEventListener("click", closeApp);
 
 /* project cards */
-$("#projectCards").innerHTML = PROJECTS.map(p => `
-  <article class="card reveal">
+$("#projectCards").innerHTML = PROJECTS.map((p, i) => `
+  <article class="card reveal" data-i="${i}">
     <div class="card-top">
       <div class="card-icon" style="background:${p.grad}">${esc(p.short)}</div>
       <div>

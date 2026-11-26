@@ -170,6 +170,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .app-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 10px;align-content:start}
 .app{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;font-family:inherit}
 .app-icon{
+  position:relative;overflow:hidden;
   width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
   font-weight:800;font-size:17px;color:#fff;letter-spacing:-.02em;
   box-shadow:0 7px 16px -7px rgba(0,0,0,.9);transition:transform .18s ease;
@@ -183,9 +184,22 @@ ul,ol{margin:0;padding:0;list-style:none}
 }
 .detail-body{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
 .detail-body::-webkit-scrollbar{width:0}
-.d-icon{width:62px;height:62px;border-radius:17px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;margin-bottom:14px}
+.app-icon img,.d-icon img,.card-icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.app-icon img,.card-icon img{opacity:0;transition:opacity .3s ease}
+.app-icon img.on,.d-icon img.on,.card-icon img.on{opacity:1}
+.app-icon.has-img,.d-icon.has-img,.card-icon.has-img{color:transparent;background:var(--surface-2)!important}
+.d-icon{position:relative;overflow:hidden;width:62px;height:62px;border-radius:17px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;margin-bottom:14px}
 .d-name{font-size:18px;font-weight:700}
 .d-kind{font-size:11.5px;color:var(--accent-2);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:12px}
+.d-shots{
+  display:flex;gap:8px;overflow-x:auto;margin:0 0 14px;padding-bottom:2px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.d-shots::-webkit-scrollbar{display:none}
+.d-shots img{
+  height:190px;width:auto;flex:none;border-radius:10px;scroll-snap-align:start;
+  border:1px solid var(--line);background:var(--surface-2);
+}
 .d-desc{font-size:12.8px;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .d-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .d-tags span{font-size:10px;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
@@ -220,7 +234,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 }
 .card:hover{border-color:var(--line-hover);transform:translateY(-3px)}
 .card-top{display:flex;align-items:center;gap:13px;margin-bottom:16px}
-.card-icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;flex:none}
+.card-icon{position:relative;overflow:hidden;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;flex:none}
 .card-title{font-size:17px;font-weight:700}
 .card-kind{font-size:11.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
 .card p{color:var(--muted);font-size:14.5px;margin-bottom:16px}

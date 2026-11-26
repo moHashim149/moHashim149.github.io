@@ -1,0 +1,28 @@
+name: Refresh Google Play assets
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # every Monday 06:00 UTC (weekly)
+  workflow_dispatch:       # manual run button in the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch Play icons and screenshots
+        run: python3 scripts/fetch_play.py
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain data/play.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/play.json
+            git commit -m "chore: refresh Play Store assets"
+            git push
+          else
+            echo "No changes."
+          fi
